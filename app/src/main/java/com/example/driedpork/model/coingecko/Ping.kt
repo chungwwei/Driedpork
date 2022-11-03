@@ -1,4 +1,6 @@
-package com.example.driedpork
+package com.example.driedpork.model.coingecko
 
-class Ping {
-}
+
+data class Ping (
+    val gecko_says : String
+)

@@ -1,6 +1,7 @@
 package com.example.driedpork
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -13,15 +14,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key.Companion.Info
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import com.example.driedpork.coingecko.CoingeckoAPI
 import com.example.driedpork.ui.theme.DriedporkTheme
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.i("MainActivity", "onCreate")
+        lifecycleScope.launchWhenCreated {
+            Log.i("MainActivity", "launchWhenCreated")
+            try {
+                val ping = CoingeckoAPI.retrofitService.ping()
+                Log.i("MainActivity", "ping: $ping")
+                println(ping)
+                val coinsReponse = CoingeckoAPI.retrofitService.getCoinsList()
+                val coins = coinsReponse.body()
+                Log.i("MainActivity", "coins: ${coins}")
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Exception: $e")
+            }
+        }
+
         setContent {
             DriedporkTheme {
                 // A surface container using the 'background' color from the theme

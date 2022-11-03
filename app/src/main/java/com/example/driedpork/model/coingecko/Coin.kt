@@ -1,4 +1,8 @@
 package com.example.driedpork.model.coingecko
 
-class Coin {
-}
+data class Coin (
+    val id: String,
+    val symbol: String,
+    val name: String,
+    val platform: Any?,
+)

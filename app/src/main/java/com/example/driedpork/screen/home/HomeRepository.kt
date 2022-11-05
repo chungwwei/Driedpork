@@ -1,11 +1,11 @@
-package c
+package com.example.driedpork.screen.home
 
 import com.example.driedpork.coingecko.CoingeckoAPI
 import com.example.driedpork.model.coingecko.Market
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class HomeRepository() {
+class HomeRepository {
 
     val coinsList: Flow<List<Market>> = flow {
         val marketsResponse = CoingeckoAPI.retrofitService.getCoinsMarkets(

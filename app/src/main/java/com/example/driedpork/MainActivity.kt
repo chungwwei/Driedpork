@@ -15,81 +15,64 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key.Companion.Info
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.example.driedpork.coingecko.CoingeckoAPI
 import com.example.driedpork.model.coingecko.Market
+import com.example.driedpork.screen.SetupNavigation
 import com.example.driedpork.ui.theme.DriedporkTheme
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Log.i("MainActivity", "onCreate")
-        lifecycleScope.launchWhenCreated {
-            Log.i("MainActivity", "launchWhenCreated")
-            try {
-                val ping = CoingeckoAPI.retrofitService.ping()
-                Log.i("MainActivity", "ping: $ping")
-                println(ping)
-                val marketResponse = CoingeckoAPI.retrofitService.getCoinsMarkets(
-                    vs_currency = "usd",
-                    ids = null,
-                    order = "market_cap_desc",
-                    per_page = 100,
-                    page = 1,
-                    sparkline = false,
-                    price_change_percentage = "1h,24h,7d,14d,30d,200d,1y")
-                val coins = marketResponse.body();
-                Log.i("MainActivity", "coins: $coins")
-
-                setContent {
-                    DriedporkTheme {
-                        // A surface container using the 'background' color from the theme
-                        //                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                        //
-                        //                    ColumnThings()
-                        //                }
-                        Scaffold(
-                            topBar = { TopBar() },
-                            bottomBar = { BottomNavigationBar() }
-
-                        ) {
-
-                            Box() {
-                                CoinsList(coins = coins!!)
-                            }
-                        }
-                    }
-                }
-                Log.i("MainActivity", "coins: ${coins}")
-            } catch (e: Exception) {
-                Log.e("MainActivity", "Exception: $e")
-            }
+        setContent {
+            MainScreenView()
         }
+//        lifecycleScope.launchWhenCreated {
+//            try {
+//                val marketResponse = CoingeckoAPI.retrofitService.getCoinsMarkets(
+//                    vs_currency = "usd",
+//                    ids = null,
+//                    order = "market_cap_desc",
+//                    per_page = 100,
+//                    page = 1,
+//                    sparkline = false,
+//                    price_change_percentage = "1h,24h,7d,14d,30d,200d,1y")
+//                val coins = marketResponse.body();
+//                Log.i("MainActivity", "coins: $coins")
+
+//                setContent {
+//                    DriedporkTheme() {
+//                        MainScreenView()
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                Log.e("MainActivity", "Exception: $e")
+//            }
+//        }
     }
 }
 
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
+fun MainScreenView() {
+    val navController = rememberNavController()
+    Scaffold(
+        topBar = { TopBar() },
+        bottomBar = { BottomNavigationBar(navController) }
 
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    DriedporkTheme {
-        Greeting("Android")
+    ) {
+        SetupNavigation(navController)
     }
 }
-
 
 @Composable
 fun CoinsList(coins: List<Market>) {
@@ -103,16 +86,12 @@ fun CoinsList(coins: List<Market>) {
             CryptoItem(m = coins[index])
         }
     }
-//        messages.forEach {
-//            message -> CryptoItem(message)
-//        }
-//    }
 }
 
 
 @Composable
 fun CryptoItem(m: Market) {
-    val percentageChangeColor = if (m.price_change_percentage_24h!! > 0) Color.Green else Color.Red
+    val percentageChangeColor = if (m.price_change_percentage_24h > 0) Color.Green else Color.Red
     Box(
         modifier = Modifier
             .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
@@ -161,10 +140,12 @@ fun CryptoItem(m: Market) {
 //}
 
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(
+    navController: NavController
+) {
     val items = listOf(
         "home",
-        "favorite",
+        "search",
         "convert",
     )
     BottomNavigation() {
@@ -178,6 +159,7 @@ fun BottomNavigationBar() {
                 selected = false,
                 onClick = {
                     /* Add code later */
+                    navController.navigate(item)
                 }
             )
         }
@@ -200,7 +182,22 @@ fun TopBar() {
     }
 }
 
+//@Composable
+//fun BottomNavigationBarPreview() {
+//    BottomNavigationBar()
+//}
+
 @Composable
-fun BottomNavigationBarPreview() {
-    BottomNavigationBar()
+fun HomeScreen() {
+    CoinsList(coins = listOf())
+}
+
+@Composable
+fun SearchScreen() {
+    Text("Search")
+}
+
+@Composable
+fun ConvertScreen() {
+    Text("Convert")
 }

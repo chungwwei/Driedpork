@@ -12,12 +12,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,9 +31,15 @@ import coil.compose.rememberImagePainter
 import com.example.driedpork.coingecko.CoingeckoAPI
 import com.example.driedpork.model.coingecko.Market
 import com.example.driedpork.screen.SetupNavigation
+import com.example.driedpork.screen.home.HomeRepository
+import com.example.driedpork.screen.home.HomeScreenViewModel
 import com.example.driedpork.ui.theme.DriedporkTheme
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -188,8 +198,15 @@ fun TopBar() {
 //}
 
 @Composable
-fun HomeScreen() {
-    CoinsList(coins = listOf())
+fun HomeScreen(
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
+) {
+    val uiState by homeScreenViewModel.uiState.collectAsState()
+    Log.i("HomeScreen", "uiState: $uiState")
+    val coins = uiState.coinsList
+
+    Log.i("HomeScreen", "coins: $coins")
+    CoinsList(coins = coins)
 }
 
 @Composable

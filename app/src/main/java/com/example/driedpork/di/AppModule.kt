@@ -1,6 +1,7 @@
 package com.example.driedpork.di
 
 import com.example.driedpork.screen.home.HomeRepository
+import com.example.driedpork.screen.search.SearchRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,5 +16,11 @@ object AppModule {
     @Singleton
     fun provideHomeRepository(): HomeRepository {
         return HomeRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSearchRepository(): SearchRepository {
+        return SearchRepository()
     }
 }

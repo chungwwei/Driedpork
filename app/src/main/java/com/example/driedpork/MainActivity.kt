@@ -30,9 +30,11 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.example.driedpork.coingecko.CoingeckoAPI
 import com.example.driedpork.model.coingecko.Market
+import com.example.driedpork.model.coingecko.search.TrendingCoin
 import com.example.driedpork.screen.SetupNavigation
 import com.example.driedpork.screen.home.HomeRepository
 import com.example.driedpork.screen.home.HomeScreenViewModel
+import com.example.driedpork.screen.search.SearchScreenViewModel
 import com.example.driedpork.ui.theme.DriedporkTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -210,8 +212,93 @@ fun HomeScreen(
 }
 
 @Composable
-fun SearchScreen() {
-    Text("Search")
+fun SearchScreen(
+    searchScreenViewModel: SearchScreenViewModel = hiltViewModel()
+) {
+    val uiState by searchScreenViewModel.uiState.collectAsState()
+    val coins = uiState.trendingCoinList
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 2.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+                .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
+        ) {
+            TextField(
+                value = "",
+                onValueChange = { /*TODO*/ },
+                label = { Text("Search") },
+                colors= TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    cursorColor = Color.Blue,
+                    textColor = Color.Blue
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            )
+        }
+        SearchResults("Trending", coins)
+    }
+}
+
+@Composable
+fun SearchResultItem(coin: TrendingCoin) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(64.dp)
+            .padding(horizontal = 16.dp, vertical = 2.dp)
+            .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
+    ) {
+        Row () {
+            // crypto icon
+            Image(
+                painter = rememberImagePainter(coin.item.thumb),
+                contentDescription = "Crypto Icon",
+                modifier = Modifier
+                    .size(50.dp)
+                    .align(Alignment.CenterVertically)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                // crypto full name and short hand column
+                Column() {
+                    Text(coin.item.name)
+                    Text(coin.item.symbol)
+                }
+
+                // ranking
+                Text("#${coin.item.market_cap_rank}")
+            }
+        }
+    }
+}
+
+@Composable
+fun SearchResults(label: String, trendingCoins: List<TrendingCoin>) {
+    Column() {
+        Box() {
+            Text(label)
+        }
+        Column() {
+            trendingCoins.forEach { coin ->
+                SearchResultItem(coin)
+            }
+        }
+    }
 }
 
 @Composable

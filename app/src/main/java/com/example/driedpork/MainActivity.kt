@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,11 +27,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.example.driedpork.coingecko.CoingeckoAPI
+import com.example.driedpork.composable.search.SearchResults
 import com.example.driedpork.model.coingecko.Market
+import com.example.driedpork.model.coingecko.search.SearchResults
 import com.example.driedpork.model.coingecko.search.TrendingCoin
 import com.example.driedpork.screen.SetupNavigation
 import com.example.driedpork.screen.home.HomeRepository
 import com.example.driedpork.screen.home.HomeScreenViewModel
+import com.example.driedpork.screen.search.CoinDisplay
 import com.example.driedpork.screen.search.SearchScreenViewModel
 import com.example.driedpork.ui.theme.DriedporkTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -109,7 +110,7 @@ fun CryptoItem(m: Market) {
             .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
             .padding(16.dp)
     ) {
-        Row () {
+        Row() {
             // crypto icon
             Image(
                 painter = rememberImagePainter(m.image),
@@ -142,7 +143,6 @@ fun CryptoItem(m: Market) {
         }
     }
 }
-
 
 
 //sealed class NavigationItem(var route: String, var icon: Int, var title: String) {
@@ -215,8 +215,10 @@ fun HomeScreen(
 fun SearchScreen(
     searchScreenViewModel: SearchScreenViewModel = hiltViewModel()
 ) {
+    val queryText = remember { mutableStateOf("") }
     val uiState by searchScreenViewModel.uiState.collectAsState()
     val coins = uiState.trendingCoinList
+    val firstFiveCoins = uiState.firstFiveCoins
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,10 +231,13 @@ fun SearchScreen(
                 .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
         ) {
             TextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
+                value = queryText.value,
+                onValueChange = {
+                    queryText.value = it
+                    searchScreenViewModel.search(it)
+                },
                 label = { Text("Search") },
-                colors= TextFieldDefaults.textFieldColors(
+                colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
@@ -245,61 +250,15 @@ fun SearchScreen(
                     .padding(horizontal = 8.dp)
             )
         }
-        SearchResults("Trending", coins)
+        if (queryText.value.isNotEmpty()) {
+            SearchResults("Search", firstFiveCoins)
+        } else {
+            SearchResults("Trending", coins.take(3))
+        }
+
     }
 }
 
-@Composable
-fun SearchResultItem(coin: TrendingCoin) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(64.dp)
-            .padding(horizontal = 16.dp, vertical = 2.dp)
-            .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
-    ) {
-        Row () {
-            // crypto icon
-            Image(
-                painter = rememberImagePainter(coin.item.thumb),
-                contentDescription = "Crypto Icon",
-                modifier = Modifier
-                    .size(50.dp)
-                    .align(Alignment.CenterVertically)
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                // crypto full name and short hand column
-                Column() {
-                    Text(coin.item.name)
-                    Text(coin.item.symbol)
-                }
-
-                // ranking
-                Text("#${coin.item.market_cap_rank}")
-            }
-        }
-    }
-}
-
-@Composable
-fun SearchResults(label: String, trendingCoins: List<TrendingCoin>) {
-    Column() {
-        Box() {
-            Text(label)
-        }
-        Column() {
-            trendingCoins.forEach { coin ->
-                SearchResultItem(coin)
-            }
-        }
-    }
-}
 
 @Composable
 fun ConvertScreen() {

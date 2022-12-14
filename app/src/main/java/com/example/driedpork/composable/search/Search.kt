@@ -19,11 +19,14 @@ fun SearchResults(label: String, coins: List<CoinDisplay>) {
         Box() {
             Text(label)
         }
-        Column() {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
             coins.forEach { coin ->
                 SearchResultItem(coin)
             }
         }
+
     }
 }
 
@@ -33,11 +36,18 @@ fun SearchResultItem(coin: CoinDisplay) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
-            .padding(horizontal = 16.dp, vertical = 2.dp)
-            .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
+            .height(76.dp)
+            .padding(horizontal = 8.dp, vertical = 2.dp)
+            .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp)),
+        contentAlignment = Alignment.CenterStart,
     ) {
-        Row() {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
+        ) {
             // crypto icon
             Image(
                 painter = rememberImagePainter(coin.image),

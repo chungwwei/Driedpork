@@ -31,6 +31,7 @@ import com.example.driedpork.composable.search.SearchResults
 import com.example.driedpork.model.coingecko.Market
 import com.example.driedpork.model.coingecko.search.SearchResults
 import com.example.driedpork.model.coingecko.search.TrendingCoin
+import com.example.driedpork.screen.BottomNavigationBar
 import com.example.driedpork.screen.SetupNavigation
 import com.example.driedpork.screen.home.HomeRepository
 import com.example.driedpork.screen.home.HomeScreenViewModel
@@ -145,39 +146,6 @@ fun CryptoItem(m: Market) {
 }
 
 
-//sealed class NavigationItem(var route: String, var icon: Int, var title: String) {
-//    object Home : NavigationItem("home", R.drawable.ic_home, "Home")
-//    object Music : NavigationItem("music", R.drawable.ic_music, "Music")
-//    object Movies : NavigationItem("movies", R.drawable.ic_movie, "Movies")
-//}
-
-@Composable
-fun BottomNavigationBar(
-    navController: NavController
-) {
-    val items = listOf(
-        "home",
-        "search",
-        "convert",
-    )
-    BottomNavigation() {
-        items.forEach { item ->
-            BottomNavigationItem(
-                icon = { null },
-                label = { Text(text = item) },
-                selectedContentColor = Color.White,
-                unselectedContentColor = Color.White.copy(0.4f),
-                alwaysShowLabel = true,
-                selected = false,
-                onClick = {
-                    /* Add code later */
-                    navController.navigate(item)
-                }
-            )
-        }
-    }
-}
-
 @Composable
 fun TopBar() {
     Row(
@@ -194,10 +162,6 @@ fun TopBar() {
     }
 }
 
-//@Composable
-//fun BottomNavigationBarPreview() {
-//    BottomNavigationBar()
-//}
 
 @Composable
 fun HomeScreen(

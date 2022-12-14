@@ -195,6 +195,7 @@ fun SearchScreen(
                 .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
         ) {
             TextField(
+                singleLine = true,
                 value = queryText.value,
                 onValueChange = {
                     queryText.value = it

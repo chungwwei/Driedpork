@@ -2,11 +2,9 @@ package com.example.driedpork.screen
 
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,9 +15,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.driedpork.ConvertScreen
-import com.example.driedpork.SearchScreen
 import com.example.driedpork.HomeScreen
-import com.example.driedpork.R
+import com.example.driedpork.SearchScreen
 
 @Composable
 fun SetupNavigation(navHostController: NavHostController) {

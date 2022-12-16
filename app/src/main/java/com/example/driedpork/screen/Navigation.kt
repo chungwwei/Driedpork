@@ -14,9 +14,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.driedpork.ConvertScreen
 import com.example.driedpork.HomeScreen
 import com.example.driedpork.SearchScreen
+import com.example.driedpork.composable.convert.ConvertScreen
 
 @Composable
 fun SetupNavigation(navHostController: NavHostController) {

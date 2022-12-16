@@ -220,12 +220,5 @@ fun SearchScreen(
         } else {
             SearchResults("Trending", coins.take(3))
         }
-
     }
-}
-
-
-@Composable
-fun ConvertScreen() {
-    Text("Convert")
 }

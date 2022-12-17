@@ -41,14 +41,14 @@ class ConvertScreenViewModel @Inject constructor(
     fun submitValueChange(amount: String) {
         // convert the amount to double
         Log.d("ConvertScreenViewModel", "submitValueChange: $amount")
-        val amountDouble = amount.toDoubleOrNull() ?: 1.0
+        val amountDouble = amount.toDoubleOrNull() ?: 0.0
         val convertedCoinsList = _uiState.value.coinsList.map {
             ConvertedCoinItem(
                 id = it.id,
                 symbol = it.symbol,
                 name = it.name,
                 image = it.image,
-                convertedPrice = amountDouble / it.current_price
+                convertedPrice = String.format("%.10f", amountDouble / it.current_price).toDouble()
             )
         }
         // recompose
@@ -70,7 +70,7 @@ class ConvertScreenViewModel @Inject constructor(
                             symbol = it.symbol,
                             name = it.name,
                             image = it.image,
-                            convertedPrice = 1 / it.current_price
+                            convertedPrice = String.format("%.10f", 1.0 / it.current_price).toDouble()
                         )
                     }
                 )

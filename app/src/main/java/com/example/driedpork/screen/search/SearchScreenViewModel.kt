@@ -71,7 +71,7 @@ class SearchScreenViewModel @Inject constructor(
                         image = it.thumb,
                         marketCapRank = it.market_cap_rank ?: 0
                     )
-                }.take(5)
+                }
                 )
                 Log.d("SearchScreenViewModel", "search: ${searchResults.coins}")
             }

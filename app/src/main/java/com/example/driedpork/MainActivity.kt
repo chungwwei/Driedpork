@@ -139,7 +139,7 @@ fun TopBar() {
 
     ) {
         Text("Dried Pork")
-        Text("Mott apple drinks")
+        Text("Powered by CoinGecko")
 
     }
 }

@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,14 +19,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.example.driedpork.screen.convert.ConvertScreenViewModel
 import com.example.driedpork.screen.convert.ConvertedCoinItem
 
 @Composable
 fun ConvertScreen(
-    convertScreenViewModel: ConvertScreenViewModel = hiltViewModel()
+    convertScreenViewModel: ConvertScreenViewModel
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),

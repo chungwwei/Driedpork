@@ -5,42 +5,26 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
-import com.example.driedpork.coingecko.CoingeckoAPI
 import com.example.driedpork.composable.search.SearchResults
 import com.example.driedpork.model.coingecko.Market
-import com.example.driedpork.model.coingecko.search.SearchResults
-import com.example.driedpork.model.coingecko.search.TrendingCoin
 import com.example.driedpork.screen.BottomNavigationBar
 import com.example.driedpork.screen.SetupNavigation
-import com.example.driedpork.screen.home.HomeRepository
 import com.example.driedpork.screen.home.HomeScreenViewModel
-import com.example.driedpork.screen.search.CoinDisplay
 import com.example.driedpork.screen.search.SearchScreenViewModel
-import com.example.driedpork.ui.theme.DriedporkTheme
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @AndroidEntryPoint
@@ -82,7 +66,6 @@ fun MainScreenView() {
     Scaffold(
         topBar = { TopBar() },
         bottomBar = { BottomNavigationBar(navController) }
-
     ) {
         SetupNavigation(navController)
     }
@@ -95,7 +78,6 @@ fun CoinsList(coins: List<Market>) {
         modifier = Modifier
             .padding(15.dp)
     ) {
-
         items(coins.size) { index ->
             CryptoItem(m = coins[index])
         }
@@ -165,8 +147,9 @@ fun TopBar() {
 
 @Composable
 fun HomeScreen(
-    homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
+    homeScreenViewModel: HomeScreenViewModel
 ) {
+    val savedState = rememberSaveableStateHolder()
     val uiState by homeScreenViewModel.uiState.collectAsState()
     Log.i("HomeScreen", "uiState: $uiState")
     val coins = uiState.coinsList
@@ -177,7 +160,7 @@ fun HomeScreen(
 
 @Composable
 fun SearchScreen(
-    searchScreenViewModel: SearchScreenViewModel = hiltViewModel()
+    searchScreenViewModel: SearchScreenViewModel
 ) {
     val queryText = remember { mutableStateOf("") }
     val uiState by searchScreenViewModel.uiState.collectAsState()

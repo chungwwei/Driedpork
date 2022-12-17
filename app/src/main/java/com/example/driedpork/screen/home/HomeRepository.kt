@@ -1,5 +1,6 @@
 package com.example.driedpork.screen.home
 
+import android.util.Log
 import com.example.driedpork.coingecko.CoingeckoAPI
 import com.example.driedpork.model.coingecko.Market
 import kotlinx.coroutines.delay
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.flow
 class HomeRepository {
 
     val coinsList: Flow<List<Market>> = flow {
+        while(true) {
             val marketsResponse = CoingeckoAPI.retrofitService.getCoinsMarkets(
                 vs_currency = "usd",
                 ids = null,
@@ -22,5 +24,8 @@ class HomeRepository {
             if (markets != null) {
                 emit(markets)
             }
+            delay(15000)
+            Log.d("HomeRepository", "delaying then refetching")
+        }
     }
 }

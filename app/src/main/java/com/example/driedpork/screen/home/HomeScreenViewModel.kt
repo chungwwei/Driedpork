@@ -1,5 +1,6 @@
 package com.example.driedpork.screen.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.driedpork.model.coingecko.Market
@@ -25,16 +26,24 @@ class HomeScreenViewModel @Inject constructor(
     val uiState: StateFlow<HomeScreenUiState> = _uiState.asStateFlow()
 
     init {
+        Log.d("HomeViewModel", "init homeviewmodel")
         getCoins()
     }
 
     private fun getCoins() {
         viewModelScope.launch {
             homeRepository.coinsList.collect { coinsList ->
+                Log.d("HomeViewModel", "${coinsList[0].current_price}")
                 _uiState.value = _uiState.value.copy(
                     coinsList = coinsList
                 )
             }
         }
+    }
+
+    override fun onCleared() {
+        Log.d("HomeViewModel:", "homeviewmodel cleared")
+        super.onCleared()
+        Log.d("HomeViewModel:", "homeviewmodel cleared")
     }
 }

@@ -33,7 +33,6 @@ class HomeScreenViewModel @Inject constructor(
     private fun getCoins() {
         viewModelScope.launch {
             homeRepository.coinsList.collect { coinsList ->
-                Log.d("HomeViewModel", "${coinsList[0].current_price}")
                 _uiState.value = _uiState.value.copy(
                     coinsList = coinsList
                 )

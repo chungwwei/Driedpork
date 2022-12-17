@@ -48,7 +48,7 @@ class ConvertScreenViewModel @Inject constructor(
                 symbol = it.symbol,
                 name = it.name,
                 image = it.image,
-                convertedPrice = String.format("%.10f", amountDouble / it.current_price).toDouble()
+                convertedPrice = String.format("%.10f", amountDouble / it.currentPrice).toDouble()
             )
         }
         // recompose
@@ -70,7 +70,7 @@ class ConvertScreenViewModel @Inject constructor(
                             symbol = it.symbol,
                             name = it.name,
                             image = it.image,
-                            convertedPrice = String.format("%.10f", 1.0 / it.current_price).toDouble()
+                            convertedPrice = String.format("%.10f", 1.0 / it.currentPrice).toDouble()
                         )
                     }
                 )

@@ -15,9 +15,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.driedpork.HomeScreen
-import com.example.driedpork.SearchScreen
 import com.example.driedpork.composable.convert.ConvertScreen
+import com.example.driedpork.composable.home.HomeScreen
+import com.example.driedpork.composable.search.SearchScreen
 import com.example.driedpork.screen.convert.ConvertScreenViewModel
 import com.example.driedpork.screen.home.HomeScreenViewModel
 import com.example.driedpork.screen.search.SearchScreenViewModel

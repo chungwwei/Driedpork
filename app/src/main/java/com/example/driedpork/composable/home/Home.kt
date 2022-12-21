@@ -3,6 +3,7 @@ package com.example.driedpork.composable.home
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,14 +18,24 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.example.driedpork.model.coingecko.Market
 import com.example.driedpork.screen.home.HomeScreenViewModel
+import java.text.NumberFormat
+import java.util.*
 
 @Composable
-fun CryptoItem(m: Market) {
+fun CryptoItem(m: Market, onItemClick: (coin: Market) -> Unit) {
     val percentageChangeColor = if (m.priceChangePercentage24h > 0) Color.Green else Color.Red
+    val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "US"))
+    numberFormat.maximumFractionDigits = 2
+    numberFormat.minimumFractionDigits = 2
     Box(
         modifier = Modifier
+            .clickable {
+                onItemClick(m)
+                Log.d("click", "lots of licks")
+            }
             .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
             .padding(16.dp)
+
     ) {
         Row() {
             // crypto icon
@@ -52,7 +63,7 @@ fun CryptoItem(m: Market) {
                 Column(
                     horizontalAlignment = Alignment.End
                 ) {
-                    Text("$${m.currentPrice}")
+                    Text(numberFormat.format(m.currentPrice))
                     Text("${m.priceChangePercentage24h}%", color = percentageChangeColor)
                 }
             }
@@ -62,14 +73,14 @@ fun CryptoItem(m: Market) {
 
 
 @Composable
-fun CoinsList(coins: List<Market>) {
+fun CoinsList(coins: List<Market>, onItemClick: (coin: Market) -> Unit) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
             .padding(15.dp)
     ) {
         items(coins.size) { index ->
-            CryptoItem(m = coins[index])
+            CryptoItem(m = coins[index], onItemClick = onItemClick)
         }
     }
 }
@@ -78,12 +89,13 @@ fun CoinsList(coins: List<Market>) {
 
 @Composable
 fun HomeScreen(
-    homeScreenViewModel: HomeScreenViewModel
+    homeScreenViewModel: HomeScreenViewModel,
+    onItemClick: (coin: Market) -> Unit
 ) {
     val uiState by homeScreenViewModel.uiState.collectAsState()
     Log.i("HomeScreen", "uiState: $uiState")
     val coins = uiState.coinsList
 
     Log.i("HomeScreen", "coins: $coins")
-    CoinsList(coins = coins)
+    CoinsList(coins = coins, onItemClick = onItemClick)
 }

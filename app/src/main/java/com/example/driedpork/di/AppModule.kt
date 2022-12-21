@@ -1,5 +1,6 @@
 package com.example.driedpork.di
 
+import com.example.driedpork.screen.detail.DetailRepository
 import com.example.driedpork.screen.home.HomeRepository
 import com.example.driedpork.screen.search.SearchRepository
 import dagger.Module
@@ -22,5 +23,11 @@ object AppModule {
     @Singleton
     fun provideSearchRepository(): SearchRepository {
         return SearchRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDetailRepository(): DetailRepository {
+        return DetailRepository()
     }
 }

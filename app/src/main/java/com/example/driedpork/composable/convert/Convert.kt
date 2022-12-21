@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.example.driedpork.screen.convert.ConvertScreenViewModel
 import com.example.driedpork.screen.convert.ConvertedCoinItem
+import java.text.NumberFormat
+
 
 @Composable
 fun ConvertScreen(
@@ -96,6 +98,9 @@ fun ConvertResults(coins: List<ConvertedCoinItem>) {
 
 @Composable
 fun ConvertDisplayItem(coin: ConvertedCoinItem) {
+    val numberFormat: NumberFormat = NumberFormat.getNumberInstance();
+    numberFormat.maximumFractionDigits = 10
+    numberFormat.minimumFractionDigits = 2
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -129,7 +134,7 @@ fun ConvertDisplayItem(coin: ConvertedCoinItem) {
                 // crypto name
                 Text(coin.name)
                 // price
-                Text(coin.convertedPrice.toString())
+                Text(numberFormat.format(coin.convertedPrice))
             }
         }
     }

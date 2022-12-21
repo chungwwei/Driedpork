@@ -1,7 +1,6 @@
 package com.example.driedpork.screen.convert
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.driedpork.model.coingecko.Market
@@ -70,7 +69,7 @@ class ConvertScreenViewModel @Inject constructor(
                             symbol = it.symbol,
                             name = it.name,
                             image = it.image,
-                            convertedPrice = String.format("%.10f", 1.0 / it.currentPrice).toDouble()
+                            convertedPrice = 1.0 / it.currentPrice
                         )
                     }
                 )

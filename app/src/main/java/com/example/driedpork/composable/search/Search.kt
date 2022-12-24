@@ -1,11 +1,9 @@
 package com.example.driedpork.composable.search
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import android.util.Log
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -19,7 +17,7 @@ import com.example.driedpork.screen.search.CoinDisplay
 import com.example.driedpork.screen.search.SearchScreenViewModel
 
 @Composable
-fun SearchResults(label: String, coins: List<CoinDisplay>) {
+fun SearchResults(label: String, coins: List<CoinDisplay>, onItemClick: (coinId: String) -> Unit) {
     Column() {
         Box() {
             Text(label)
@@ -31,7 +29,7 @@ fun SearchResults(label: String, coins: List<CoinDisplay>) {
                 .verticalScroll(rememberScrollState()),
         ) {
             coins.forEach { coin ->
-                SearchResultItem(coin)
+                SearchResultItem(coin, onItemClick)
             }
         }
 
@@ -40,9 +38,13 @@ fun SearchResults(label: String, coins: List<CoinDisplay>) {
 
 
 @Composable
-fun SearchResultItem(coin: CoinDisplay) {
+fun SearchResultItem(coin: CoinDisplay, onItemClick: (coinId: String) -> Unit) {
     Box(
         modifier = Modifier
+            .clickable {
+                onItemClick(coin.id)
+                Log.d("click", "lots of licks")
+            }
             .fillMaxWidth()
             .height(76.dp)
             .padding(horizontal = 8.dp, vertical = 2.dp)
@@ -87,7 +89,8 @@ fun SearchResultItem(coin: CoinDisplay) {
 
 @Composable
 fun SearchScreen(
-    searchScreenViewModel: SearchScreenViewModel
+    searchScreenViewModel: SearchScreenViewModel,
+    onItemClick: (coinId: String) -> Unit
 ) {
     val queryText = remember { mutableStateOf("") }
     val uiState by searchScreenViewModel.uiState.collectAsState()
@@ -126,9 +129,9 @@ fun SearchScreen(
             )
         }
         if (queryText.value.isNotEmpty()) {
-            SearchResults("Search", firstFiveCoins)
+            SearchResults("Search", firstFiveCoins, onItemClick)
         } else {
-            SearchResults("Trending", coins.take(3))
+            SearchResults("Trending", coins.take(3), onItemClick)
         }
     }
 }

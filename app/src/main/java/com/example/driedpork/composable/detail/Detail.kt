@@ -1,6 +1,5 @@
 package com.example.driedpork.composable.detail
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -15,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import com.example.driedpork.model.coingecko.Market
+import com.example.driedpork.screen.detail.DetailScreenUiState
 import com.example.driedpork.screen.detail.DetailScreenViewModel
 import com.patrykandpatryk.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatryk.vico.compose.axis.vertical.startAxis
@@ -24,8 +23,6 @@ import com.patrykandpatryk.vico.compose.chart.line.lineChart
 import com.patrykandpatryk.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatryk.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatryk.vico.core.entry.FloatEntry
-import java.text.NumberFormat
-import java.util.*
 
 @Composable
 fun RowInfoItem(
@@ -44,11 +41,7 @@ fun RowInfoItem(
 }
 
 @Composable
-fun InfoColumn(coin: Market) {
-    val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "US"))
-    numberFormat.maximumFractionDigits = 2
-    numberFormat.minimumFractionDigits = 2
-
+fun InfoColumn(uiState: DetailScreenUiState) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,24 +49,25 @@ fun InfoColumn(coin: Market) {
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
 
     ) {
-        RowInfoItem(left = "Market Cap Rank", right = coin.marketCapRank.toString())
-        RowInfoItem(left = "Market Cap", right = numberFormat.format(coin.marketCap).toString())
-        RowInfoItem(left = "Fully Diluted Valuation", right = numberFormat.format(coin.fullyDilutedValuation).toString())
-        RowInfoItem(left = "Trading Volume", right = numberFormat.format(coin.totalVolume).toString())
-        RowInfoItem(left = "24H high", right = numberFormat.format(coin.high24h).toString())
-        RowInfoItem(left = "24H Low", right = numberFormat.format(coin.low24h).toString())
-        RowInfoItem(left = "Circulating Supply", right = numberFormat.format(coin.circulatingSupply).toString())
-        RowInfoItem(left = "Total Supply", right = numberFormat.format(coin.totalSupply).toString())
+        RowInfoItem(left = "Market Cap Rank", right = uiState.marketCapRank)
+        RowInfoItem(left = "Market Cap", right = uiState.marketCap)
+//        RowInfoItem(left = "Fully Diluted Valuation", right = )
+        RowInfoItem(left = "Trading Volume", right = uiState.totalVolume)
+        RowInfoItem(left = "24H high", right = uiState.high24h)
+        RowInfoItem(left = "24H Low", right = uiState.low24h)
+        RowInfoItem(left = "Circulating Supply", right = uiState.circulatingSupply)
+        RowInfoItem(left = "Total Supply", right = uiState.totalSupply)
+        RowInfoItem(left = "ATH", right = uiState.ath)
+        RowInfoItem(left = "ATL", right = uiState.atl)
     }
 }
 
 @Composable
-fun DetailScreen(coin: Market, detailScreenViewModel: DetailScreenViewModel) {
+fun DetailScreen(detailScreenViewModel: DetailScreenViewModel) {
     val uiState by detailScreenViewModel.uiState.collectAsState()
-    Log.i("HomeScreen", "uiState: $uiState")
     val producer = ChartEntryModelProducer(toFloatEntry(uiState.prices))
     Column(
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 16.dp)
@@ -81,27 +75,33 @@ fun DetailScreen(coin: Market, detailScreenViewModel: DetailScreenViewModel) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ){
-            Image(
-                painter = rememberImagePainter(coin.image),
-                contentDescription = "Crypto Icon",
-                modifier = Modifier
-                    .size(50.dp)
-                    .align(Alignment.CenterVertically)
-            )
-            Text("$${coin.currentPrice}", style = MaterialTheme.typography.h4)
+            if (uiState.image.isNotEmpty()) {
+                Image(
+                    painter = rememberImagePainter(uiState.image),
+                    contentDescription = "Crypto Icon",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .align(Alignment.CenterVertically)
+                )
+            }
+            Text(uiState.currentPrice, style = MaterialTheme.typography.h4)
         }
         Chart(
             chart = lineChart(
                 axisValuesOverrider = AxisValuesOverrider.adaptiveYValues(1f),
-                spacing = 0.05.dp
+                spacing = 0.dp,
             ),
             chartModelProducer = producer,
             startAxis = startAxis(
                 maxLabelCount = 5,
+                label = null,
             ),
-            bottomAxis = bottomAxis(),
+            // bottomAxis with no label
+            bottomAxis = bottomAxis(
+                label = null,
+            ),
         )
-        InfoColumn(coin = coin)
+        InfoColumn(uiState = uiState)
     }
 }
 
@@ -110,13 +110,3 @@ fun toFloatEntry(prices: List<List<Double>>): List<FloatEntry> {
         FloatEntry(index.toFloat(), list[1].toFloat())
     }
 }
-
-
-//fun getRandomEntries() = List(size = 5) {
-//    25f * Random.nextFloat()
-//}.mapIndexed { x, y ->
-//    FloatEntry(
-//        x = x.toFloat(),
-//        y = y,
-//    )
-//}

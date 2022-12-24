@@ -22,7 +22,7 @@ import java.text.NumberFormat
 import java.util.*
 
 @Composable
-fun CryptoItem(m: Market, onItemClick: (coin: Market) -> Unit) {
+fun CryptoItem(m: Market, onItemClick: (coinId: String) -> Unit) {
     val percentageChangeColor = if (m.priceChangePercentage24h > 0) Color.Green else Color.Red
     val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "US"))
     numberFormat.maximumFractionDigits = 2
@@ -30,8 +30,7 @@ fun CryptoItem(m: Market, onItemClick: (coin: Market) -> Unit) {
     Box(
         modifier = Modifier
             .clickable {
-                onItemClick(m)
-                Log.d("click", "lots of licks")
+                onItemClick(m.id)
             }
             .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
             .padding(16.dp)
@@ -73,7 +72,7 @@ fun CryptoItem(m: Market, onItemClick: (coin: Market) -> Unit) {
 
 
 @Composable
-fun CoinsList(coins: List<Market>, onItemClick: (coin: Market) -> Unit) {
+fun CoinsList(coins: List<Market>, onItemClick: (coinId: String) -> Unit) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
@@ -90,7 +89,7 @@ fun CoinsList(coins: List<Market>, onItemClick: (coin: Market) -> Unit) {
 @Composable
 fun HomeScreen(
     homeScreenViewModel: HomeScreenViewModel,
-    onItemClick: (coin: Market) -> Unit
+    onItemClick: (coinId: String) -> Unit
 ) {
     val uiState by homeScreenViewModel.uiState.collectAsState()
     Log.i("HomeScreen", "uiState: $uiState")

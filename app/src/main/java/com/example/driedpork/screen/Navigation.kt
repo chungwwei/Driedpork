@@ -14,13 +14,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.driedpork.composable.convert.ConvertScreen
 import com.example.driedpork.composable.detail.DetailScreen
 import com.example.driedpork.composable.home.HomeScreen
 import com.example.driedpork.composable.search.SearchScreen
-import com.example.driedpork.model.coingecko.Market
+
 
 @Composable
 fun SetupNavigation(navHostController: NavHostController) {
@@ -29,16 +31,12 @@ fun SetupNavigation(navHostController: NavHostController) {
         "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
     }
 
-    val onItemClick: (coin: Market) -> Unit = {
-
-        // put the coin parcelable into the bundle
-        navHostController.currentBackStackEntry?.savedStateHandle?.apply {
-            set("coin", it)
-        }
-        navHostController.currentBackStackEntry?.savedStateHandle?.apply {
-            set("coinId", it.id)
-        }
-        navHostController.navigate("detail")
+    val onItemClick: (coin: String) -> Unit = {
+//        // put the coin parcelable into the bundle
+//        navHostController.currentBackStackEntry?.savedStateHandle?.apply {
+//            set("coin", it)
+//        }
+        navHostController.navigate("detail/${it}")
     }
 
     NavHost(navController = navHostController, startDestination = "home") {
@@ -46,22 +44,22 @@ fun SetupNavigation(navHostController: NavHostController) {
             HomeScreen(homeScreenViewModel = hiltViewModel(viewModelStoreOwner), onItemClick = onItemClick)
         }
         composable(route = "search") {
-            SearchScreen(searchScreenViewModel = hiltViewModel(viewModelStoreOwner))
+            SearchScreen(searchScreenViewModel = hiltViewModel(viewModelStoreOwner), onItemClick = onItemClick)
         }
         composable(route = "convert") {
             ConvertScreen(convertScreenViewModel = hiltViewModel(viewModelStoreOwner))
         }
         composable(
-            route = "detail",
+            route = "detail/{coinId}",
+            arguments = listOf(navArgument("coinId") { type = NavType.StringType })
         ) {
-            val coin = navHostController.
-                previousBackStackEntry?.
-                savedStateHandle?.
-                get<Market>("coin")
+//            val coin = navHostController.
+//                previousBackStackEntry?.
+//                savedStateHandle?.
+//                get<Market>("coin")
 
-            if (coin != null) {
-                DetailScreen(coin = coin, detailScreenViewModel = hiltViewModel(viewModelStoreOwner))
-            }
+//            val coinId: String = it.arguments?.getString("coinId")!!
+            DetailScreen(detailScreenViewModel = hiltViewModel())
         }
     }
 }

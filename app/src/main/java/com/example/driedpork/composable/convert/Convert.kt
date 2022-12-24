@@ -1,6 +1,5 @@
 package com.example.driedpork.composable.convert
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -35,10 +34,8 @@ fun ConvertScreen(
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
     ){
-        Log.d("ConvertScreen", "Recomposing")
         val uiState by convertScreenViewModel.uiState.collectAsState()
         val coinList = uiState.convertedCoinsList as List<ConvertedCoinItem>
-        Log.i("ConvertScreen", "coinList: $coinList")
         Row(
             verticalAlignment= Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),

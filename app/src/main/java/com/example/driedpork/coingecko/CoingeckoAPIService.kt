@@ -1,9 +1,6 @@
 package com.example.driedpork.coingecko
 
-import com.example.driedpork.model.coingecko.Coin
-import com.example.driedpork.model.coingecko.Market
-import com.example.driedpork.model.coingecko.MarketChart
-import com.example.driedpork.model.coingecko.Ping
+import com.example.driedpork.model.coingecko.*
 import com.example.driedpork.model.coingecko.search.SearchResults
 import com.example.driedpork.model.coingecko.search.Trending
 import com.example.driedpork.model.coingecko.search.TrendingCoinList
@@ -40,7 +37,7 @@ interface CoingeckoAPIService {
     @GET("coins/{id}")
     suspend fun getCoinsId(
         @Path("id") id: String,
-    ): Response<Any>
+    ): Response<CoinData>
 
     @GET("coins/{id}/market_chart")
     suspend fun getCoinsIdMarketChart(

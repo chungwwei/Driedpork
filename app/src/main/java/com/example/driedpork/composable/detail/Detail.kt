@@ -1,7 +1,9 @@
 package com.example.driedpork.composable.detail
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -20,7 +22,12 @@ import com.patrykandpatryk.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatryk.vico.compose.axis.vertical.startAxis
 import com.patrykandpatryk.vico.compose.chart.Chart
 import com.patrykandpatryk.vico.compose.chart.line.lineChart
+import com.patrykandpatryk.vico.compose.chart.scroll.rememberChartScrollSpec
+import com.patrykandpatryk.vico.core.axis.horizontal.HorizontalAxis
+import com.patrykandpatryk.vico.core.axis.vertical.VerticalAxis
 import com.patrykandpatryk.vico.core.chart.values.AxisValuesOverrider
+import com.patrykandpatryk.vico.core.component.shape.LineComponent
+import com.patrykandpatryk.vico.core.component.text.HorizontalPosition
 import com.patrykandpatryk.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatryk.vico.core.entry.FloatEntry
 
@@ -87,20 +94,23 @@ fun DetailScreen(detailScreenViewModel: DetailScreenViewModel) {
             Text(uiState.currentPrice, style = MaterialTheme.typography.h4)
         }
         Chart(
+            chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false),
             chart = lineChart(
-                axisValuesOverrider = AxisValuesOverrider.adaptiveYValues(1f),
-                spacing = 0.dp,
+                axisValuesOverrider = AxisValuesOverrider.adaptiveYValues(1.0f),
             ),
             chartModelProducer = producer,
             startAxis = startAxis(
+                horizontalLabelPosition = VerticalAxis.HorizontalLabelPosition.Inside,
                 maxLabelCount = 5,
-                label = null,
+                guideline = null,
             ),
-            // bottomAxis with no label
             bottomAxis = bottomAxis(
+                tickLength = 0.dp,
                 label = null,
+                guideline = null,
             ),
         )
+//        DaysSelection()
         InfoColumn(uiState = uiState)
     }
 }
@@ -110,3 +120,32 @@ fun toFloatEntry(prices: List<List<Double>>): List<FloatEntry> {
         FloatEntry(index.toFloat(), list[1].toFloat())
     }
 }
+
+//@Composable
+//private fun ItemDay(day: String, isSelected: Boolean, onClick: () -> Unit) {
+//    Text(
+//        modifier = Modifier
+//            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
+//            .padding(horizontal = 8.dp)
+//            .clickable {},
+//        text= day,
+//        style = MaterialTheme.typography.h6)
+//}
+//
+//@Composable
+//private fun DaysSelection() {
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(vertical = 4.dp)
+//            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
+//            .background(Color.LightGray),
+//        horizontalArrangement = Arrangement.SpaceEvenly
+//    ) {
+//        ItemDay(day = "1D", isSelected = true) {}
+//        ItemDay(day = "1W", isSelected = false) {}
+//        ItemDay(day = "1M", isSelected = false) {}
+//        ItemDay(day = "3M", isSelected = false) {}
+//        ItemDay(day = "1Y", isSelected = false) {}
+//    }
+//}

@@ -1,5 +1,6 @@
 package com.example.driedpork
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -52,10 +53,14 @@ class MainActivity : ComponentActivity() {
 fun MainScreenView() {
     val navController = rememberNavController()
     Scaffold(
-        topBar = { TopBar() },
         bottomBar = { BottomNavigationBar(navController) }
     ) {
-        SetupNavigation(navController)
+        Box(
+            modifier = Modifier
+                .padding(it)
+        ) {
+            SetupNavigation(navController)
+        }
     }
 }
 

@@ -19,7 +19,7 @@ class DetailRepository {
     suspend fun getMarketChartById(coinId: String): Flow<MarketChart> = flow {
         val marketChartResponse = CoingeckoAPI.
             retrofitService.
-            getCoinsIdMarketChart(id = coinId, vsCurrency = "usd", days = "10")
+            getCoinsIdMarketChart(id = coinId, vsCurrency = "usd", days = "1")
         val marketChart = marketChartResponse.body()
         if (marketChart!= null) {
             emit(marketChart)

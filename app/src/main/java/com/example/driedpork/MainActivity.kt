@@ -1,6 +1,5 @@
 package com.example.driedpork
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,28 +22,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainScreenView()
         }
-//        lifecycleScope.launchWhenCreated {
-//            try {
-//                val marketResponse = CoingeckoAPI.retrofitService.getCoinsMarkets(
-//                    vs_currency = "usd",
-//                    ids = null,
-//                    order = "market_cap_desc",
-//                    per_page = 100,
-//                    page = 1,
-//                    sparkline = false,
-//                    price_change_percentage = "1h,24h,7d,14d,30d,200d,1y")
-//                val coins = marketResponse.body();
-//                Log.i("MainActivity", "coins: $coins")
-
-//                setContent {
-//                    DriedporkTheme() {
-//                        MainScreenView()
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                Log.e("MainActivity", "Exception: $e")
-//            }
-//        }
     }
 }
 
@@ -53,6 +30,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreenView() {
     val navController = rememberNavController()
     Scaffold(
+        topBar = { TopBar() },
         bottomBar = { BottomNavigationBar(navController) }
     ) {
         Box(
@@ -77,6 +55,5 @@ fun TopBar() {
     ) {
         Text("Dried Pork")
         Text("Powered by CoinGecko")
-
     }
 }

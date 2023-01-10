@@ -88,9 +88,39 @@ fun SearchResultItem(coin: CoinDisplay, onItemClick: (coinId: String) -> Unit) {
 
 
 @Composable
+fun SearchTextField(
+    queryText: String, onQueryTextChange: (String) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(64.dp)
+            .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
+    ) {
+        TextField(
+            singleLine = true,
+            value = queryText,
+            onValueChange = onQueryTextChange,
+            label = { Text("Search") },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                cursorColor = Color.Blue,
+                textColor = Color.Blue
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+    }
+}
+
+
+@Composable
 fun SearchScreen(
-    searchScreenViewModel: SearchScreenViewModel,
-    onItemClick: (coinId: String) -> Unit
+    searchScreenViewModel: SearchScreenViewModel, onItemClick: (coinId: String) -> Unit
 ) {
     val queryText = remember { mutableStateOf("") }
     val uiState by searchScreenViewModel.uiState.collectAsState()
@@ -101,33 +131,10 @@ fun SearchScreen(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 2.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp)
-                .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
-        ) {
-            TextField(
-                singleLine = true,
-                value = queryText.value,
-                onValueChange = {
-                    queryText.value = it
-                    searchScreenViewModel.search(it)
-                },
-                label = { Text("Search") },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    cursorColor = Color.Blue,
-                    textColor = Color.Blue
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            )
-        }
+        SearchTextField(queryText = queryText.value, onQueryTextChange = {
+            queryText.value = it
+            searchScreenViewModel.search(it)
+        })
         if (queryText.value.isNotEmpty()) {
             SearchResults("Search", firstFiveCoins, onItemClick)
         } else {

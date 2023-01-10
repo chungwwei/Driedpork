@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,6 +33,8 @@ class SearchScreenViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SearchScreenUiState())
     val uiState: StateFlow<SearchScreenUiState> = _uiState.asStateFlow()
 
+    private var searchJob: Job? = null
+
     init {
         getTrending()
     }
@@ -53,7 +56,8 @@ class SearchScreenViewModel @Inject constructor(
     }
 
     fun search(query: String) {
-        viewModelScope.launch() {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch() {
             searchRepository.search(query).collect { searchResults ->
                 _uiState.value = _uiState.value.copy(coinsList = searchResults.coins.map {
                     CoinDisplay(
@@ -71,9 +75,7 @@ class SearchScreenViewModel @Inject constructor(
                         image = it.thumb,
                         marketCapRank = it.market_cap_rank ?: 0
                     )
-                }
-                )
-                Log.d("SearchScreenViewModel", "search: ${searchResults.coins}")
+                })
             }
         }
     }

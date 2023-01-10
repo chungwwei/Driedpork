@@ -109,7 +109,9 @@ fun BottomNavigationBar(
                 alwaysShowLabel = true,
                 selected = currentRoute?.route == item.route,
                 onClick = {
-                    navController.navigate(item.route)
+                    navController.navigate(item.route) {
+                        popUpTo("home")
+                    }
                     selectedItem.value = item
                 })
         }

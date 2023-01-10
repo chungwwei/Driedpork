@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.driedpork.composable.convert.ConvertScreen
 import com.example.driedpork.composable.detail.DetailScreen
@@ -41,10 +42,15 @@ fun SetupNavigation(navHostController: NavHostController) {
 
     NavHost(navController = navHostController, startDestination = "home") {
         composable(route = "home") {
-            HomeScreen(homeScreenViewModel = hiltViewModel(viewModelStoreOwner), onItemClick = onItemClick)
+            HomeScreen(
+                homeScreenViewModel = hiltViewModel(viewModelStoreOwner), onItemClick = onItemClick
+            )
         }
         composable(route = "search") {
-            SearchScreen(searchScreenViewModel = hiltViewModel(viewModelStoreOwner), onItemClick = onItemClick)
+            SearchScreen(
+                searchScreenViewModel = hiltViewModel(viewModelStoreOwner),
+                onItemClick = onItemClick
+            )
         }
         composable(route = "convert") {
             ConvertScreen(convertScreenViewModel = hiltViewModel(viewModelStoreOwner))
@@ -83,29 +89,29 @@ fun BottomNavigationBar(
         NavigationItem.Search,
         NavigationItem.Convert,
     )
+    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+    val currentRoute = navBackStackEntry?.destination
+
     BottomNavigation(
         backgroundColor = Color.DarkGray,
     ) {
         items.forEach { item ->
-            BottomNavigationItem(
-                icon = {
-                    Icon (
-                        imageVector = item.icon as ImageVector,
-                        contentDescription = item.title,
-                        tint = if (selectedItem.value == item) Color.White else Color.Gray
-                    )
-               },
+            BottomNavigationItem(icon = {
+                Icon(
+                    imageVector = item.icon as ImageVector,
+                    contentDescription = item.title,
+                    tint = if (currentRoute?.route == item.route) Color.White else Color.Gray
+                )
+            },
                 label = { Text(text = item.title) },
-                selectedContentColor = Color.Blue,
+                selectedContentColor = Color.White,
                 unselectedContentColor = Color.White.copy(0.4f),
                 alwaysShowLabel = true,
-                selected = selectedItem == item,
+                selected = currentRoute?.route == item.route,
                 onClick = {
-                    /* Add code later */
                     navController.navigate(item.route)
                     selectedItem.value = item
-                }
-            )
+                })
         }
     }
 }

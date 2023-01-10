@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.example.driedpork.composable.LoadingSpinner
 import com.example.driedpork.screen.search.CoinDisplay
 import com.example.driedpork.screen.search.SearchScreenViewModel
 
@@ -126,7 +127,9 @@ fun SearchScreen(
     val uiState by searchScreenViewModel.uiState.collectAsState()
     val coins = uiState.trendingCoinList
     val firstFiveCoins = uiState.firstFiveCoins
+    val isLoading = uiState.isLoading
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 2.dp)
@@ -136,7 +139,11 @@ fun SearchScreen(
             searchScreenViewModel.search(it)
         })
         if (queryText.value.isNotEmpty()) {
-            SearchResults("Search", firstFiveCoins, onItemClick)
+            if (isLoading) {
+                LoadingSpinner()
+            } else {
+                SearchResults("Search", firstFiveCoins, onItemClick)
+            }
         } else {
             SearchResults("Trending", coins.take(3), onItemClick)
         }

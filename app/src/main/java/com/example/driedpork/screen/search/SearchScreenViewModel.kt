@@ -1,6 +1,5 @@
 package com.example.driedpork.screen.search
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +22,7 @@ data class SearchScreenUiState(
     val trendingCoinList: List<CoinDisplay> = emptyList(),
     val coinsList: List<CoinDisplay> = emptyList(),
     val firstFiveCoins: List<CoinDisplay> = emptyList(),
+    val isLoading: Boolean = false,
 )
 
 @HiltViewModel
@@ -57,6 +57,7 @@ class SearchScreenViewModel @Inject constructor(
 
     fun search(query: String) {
         searchJob?.cancel()
+        _uiState.value = _uiState.value.copy(isLoading = true)
         searchJob = viewModelScope.launch() {
             searchRepository.search(query).collect { searchResults ->
                 _uiState.value = _uiState.value.copy(coinsList = searchResults.coins.map {
@@ -75,7 +76,8 @@ class SearchScreenViewModel @Inject constructor(
                         image = it.thumb,
                         marketCapRank = it.market_cap_rank ?: 0
                     )
-                })
+                }, isLoading = false
+                )
             }
         }
     }

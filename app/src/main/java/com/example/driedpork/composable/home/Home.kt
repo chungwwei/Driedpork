@@ -1,8 +1,6 @@
 package com.example.driedpork.composable.home
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,8 +12,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -85,8 +81,8 @@ fun CryptoItem(m: Market, onItemClick: (coinId: String) -> Unit) {
 fun CoinsList(coins: List<Market>, onItemClick: (coinId: String) -> Unit) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier
-            .padding(15.dp)
+        contentPadding = PaddingValues(vertical = 8.dp),
+        modifier = Modifier.padding(16.dp)
     ) {
         items(coins.size) { index ->
             CryptoItem(m = coins[index], onItemClick = onItemClick)
@@ -97,13 +93,10 @@ fun CoinsList(coins: List<Market>, onItemClick: (coinId: String) -> Unit) {
 
 @Composable
 fun HomeScreen(
-    homeScreenViewModel: HomeScreenViewModel,
-    onItemClick: (coinId: String) -> Unit
+    homeScreenViewModel: HomeScreenViewModel, onItemClick: (coinId: String) -> Unit
 ) {
     val uiState by homeScreenViewModel.uiState.collectAsState()
-    Log.i("HomeScreen", "uiState: $uiState")
     val coins = uiState.coinsList
 
-    Log.i("HomeScreen", "coins: $coins")
     CoinsList(coins = coins, onItemClick = onItemClick)
 }

@@ -2,6 +2,7 @@ package com.example.driedpork.composable.search
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -23,17 +24,17 @@ fun SearchResults(label: String, coins: List<CoinDisplay>, onItemClick: (coinId:
         Box() {
             Text(label)
         }
-        Column(
+        LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(vertical = 8.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState()),
         ) {
-            coins.forEach { coin ->
-                SearchResultItem(coin, onItemClick)
+
+            items(coins.size) { index ->
+                SearchResultItem(coins[index], onItemClick)
             }
         }
-
     }
 }
 

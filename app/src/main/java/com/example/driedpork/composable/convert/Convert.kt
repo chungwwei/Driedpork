@@ -2,6 +2,7 @@ package com.example.driedpork.composable.convert
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.example.driedpork.composable.home.CryptoItem
 import com.example.driedpork.screen.convert.ConvertScreenViewModel
 import com.example.driedpork.screen.convert.ConvertedCoinItem
 import java.text.NumberFormat
@@ -75,14 +77,13 @@ fun InputPriceTextField(model: ConvertScreenViewModel) {
 
 @Composable
 fun ConvertResults(coins: List<ConvertedCoinItem>) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(vertical = 8.dp),
     ) {
-        coins.forEach { coin ->
-            ConvertDisplayItem(coin)
+        items(coins.size) { index ->
+            ConvertDisplayItem(coin = coins[index])
         }
     }
 }

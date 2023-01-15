@@ -9,23 +9,16 @@ object CoingeckoAPI {
 
     private const val BASE_URL = "https://api.coingecko.com/api/v3/"
 
-    private val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
+    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
-    private val retrofit = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
+    private val retrofit =
+        Retrofit.Builder().addConverterFactory(MoshiConverterFactory.create(moshi))
 //        .addCallAdapterFactory(CoroutineCallAdapterFactory())
 //        .client(clientBuilder.build())
-        .baseUrl(BASE_URL)
-        .build()
+            .baseUrl(BASE_URL).build()
 
     val retrofitService: CoingeckoAPIService by lazy {
         retrofit.create(CoingeckoAPIService::class.java)
     }
 
 }
-
-// To use it you just need to do:
-// MyApi.retrofitService
-// MyApi.otherService

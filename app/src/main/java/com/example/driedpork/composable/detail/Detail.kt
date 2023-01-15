@@ -1,16 +1,13 @@
 package com.example.driedpork.composable.detail
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,13 +20,12 @@ import com.patrykandpatryk.vico.compose.axis.vertical.startAxis
 import com.patrykandpatryk.vico.compose.chart.Chart
 import com.patrykandpatryk.vico.compose.chart.line.lineChart
 import com.patrykandpatryk.vico.compose.chart.scroll.rememberChartScrollSpec
-import com.patrykandpatryk.vico.core.axis.horizontal.HorizontalAxis
 import com.patrykandpatryk.vico.core.axis.vertical.VerticalAxis
 import com.patrykandpatryk.vico.core.chart.values.AxisValuesOverrider
-import com.patrykandpatryk.vico.core.component.shape.LineComponent
-import com.patrykandpatryk.vico.core.component.text.HorizontalPosition
+import com.patrykandpatryk.vico.core.component.text.textComponent
 import com.patrykandpatryk.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatryk.vico.core.entry.FloatEntry
+import android.graphics.Color as AndroidColor
 
 @Composable
 fun RowInfoItem(
@@ -49,23 +45,29 @@ fun RowInfoItem(
 
 @Composable
 fun InfoColumn(uiState: DetailScreenUiState) {
-    Column(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
-
+            .padding(vertical = 4.dp, horizontal = 16.dp),
+        shape = RoundedCornerShape(24.dp),
+        elevation = 8.dp,
     ) {
-        RowInfoItem(left = "Market Cap Rank", right = uiState.marketCapRank)
-        RowInfoItem(left = "Market Cap", right = uiState.marketCap)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 16.dp)
+        ) {
+            RowInfoItem(left = "Market Cap Rank", right = uiState.marketCapRank)
+            RowInfoItem(left = "Market Cap", right = uiState.marketCap)
 //        RowInfoItem(left = "Fully Diluted Valuation", right = )
-        RowInfoItem(left = "Trading Volume", right = uiState.totalVolume)
-        RowInfoItem(left = "24H high", right = uiState.high24h)
-        RowInfoItem(left = "24H Low", right = uiState.low24h)
-        RowInfoItem(left = "Circulating Supply", right = uiState.circulatingSupply)
-        RowInfoItem(left = "Total Supply", right = uiState.totalSupply)
-        RowInfoItem(left = "ATH", right = uiState.ath)
-        RowInfoItem(left = "ATL", right = uiState.atl)
+            RowInfoItem(left = "Trading Volume", right = uiState.totalVolume)
+            RowInfoItem(left = "24H high", right = uiState.high24h)
+            RowInfoItem(left = "24H Low", right = uiState.low24h)
+            RowInfoItem(left = "Circulating Supply", right = uiState.circulatingSupply)
+            RowInfoItem(left = "Total Supply", right = uiState.totalSupply)
+            RowInfoItem(left = "ATH", right = uiState.ath)
+            RowInfoItem(left = "ATL", right = uiState.atl)
+        }
     }
 }
 
@@ -73,6 +75,11 @@ fun InfoColumn(uiState: DetailScreenUiState) {
 fun DetailScreen(detailScreenViewModel: DetailScreenViewModel) {
     val uiState by detailScreenViewModel.uiState.collectAsState()
     val producer = ChartEntryModelProducer(toFloatEntry(uiState.prices))
+
+    val textComponent = textComponent {
+        textSizeSp = 18f
+        color = AndroidColor.MAGENTA
+    }
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
@@ -81,7 +88,7 @@ fun DetailScreen(detailScreenViewModel: DetailScreenViewModel) {
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ){
+        ) {
             if (uiState.image.isNotEmpty()) {
                 Image(
                     painter = rememberImagePainter(uiState.image),
@@ -100,6 +107,7 @@ fun DetailScreen(detailScreenViewModel: DetailScreenViewModel) {
             ),
             chartModelProducer = producer,
             startAxis = startAxis(
+                label = textComponent,
                 horizontalLabelPosition = VerticalAxis.HorizontalLabelPosition.Inside,
                 maxLabelCount = 5,
                 guideline = null,
@@ -110,7 +118,9 @@ fun DetailScreen(detailScreenViewModel: DetailScreenViewModel) {
                 guideline = null,
             ),
         )
-//        DaysSelection()
+        DaysSelection(
+            daysSelected = uiState.daysSelected, detailScreenViewModel = detailScreenViewModel
+        )
         InfoColumn(uiState = uiState)
     }
 }
@@ -121,31 +131,59 @@ fun toFloatEntry(prices: List<List<Double>>): List<FloatEntry> {
     }
 }
 
-//@Composable
-//private fun ItemDay(day: String, isSelected: Boolean, onClick: () -> Unit) {
-//    Text(
-//        modifier = Modifier
-//            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
-//            .padding(horizontal = 8.dp)
-//            .clickable {},
-//        text= day,
-//        style = MaterialTheme.typography.h6)
-//}
-//
-//@Composable
-//private fun DaysSelection() {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 4.dp)
-//            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
-//            .background(Color.LightGray),
-//        horizontalArrangement = Arrangement.SpaceEvenly
-//    ) {
-//        ItemDay(day = "1D", isSelected = true) {}
-//        ItemDay(day = "1W", isSelected = false) {}
-//        ItemDay(day = "1M", isSelected = false) {}
-//        ItemDay(day = "3M", isSelected = false) {}
-//        ItemDay(day = "1Y", isSelected = false) {}
-//    }
-//}
+@Composable
+private fun ItemDay(
+    day: String, isSelected: Boolean, onClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .clickable {
+                onClick()
+            }
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        shape = RoundedCornerShape(24.dp),
+        contentColor = if (isSelected) Color.LightGray else Color.Transparent,
+    ) {
+        Text(
+            text = day,
+        )
+    }
+}
+
+
+@Composable
+private fun DaysSelection(
+    daysSelected: String,
+    detailScreenViewModel: DetailScreenViewModel,
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 24.dp),
+        shape = RoundedCornerShape(24.dp),
+        elevation = 8.dp,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp, horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            ItemDay(day = "1D", isSelected = daysSelected == "1D") {
+                detailScreenViewModel.onDaysSelect("1D")
+            }
+            ItemDay(day = "1W", isSelected = daysSelected == "1W") {
+                detailScreenViewModel.onDaysSelect("1W")
+            }
+            ItemDay(day = "1M", isSelected = daysSelected == "1M") {
+                detailScreenViewModel.onDaysSelect("1M")
+            }
+            ItemDay(day = "3M", isSelected = daysSelected == "3M") {
+                detailScreenViewModel.onDaysSelect("3M")
+            }
+            ItemDay(day = "max", isSelected = daysSelected == "max") {
+                detailScreenViewModel.onDaysSelect("max")
+            }
+        }
+    }
+}

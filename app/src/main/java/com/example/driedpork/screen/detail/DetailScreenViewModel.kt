@@ -1,6 +1,5 @@
 package com.example.driedpork.screen.detail
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,6 +27,7 @@ data class DetailScreenUiState(
     val currentPrice: String = "",
     val ath: String = "",
     val atl: String = "",
+    val daysSelected: String = "1D",
 )
 
 @HiltViewModel
@@ -45,7 +45,7 @@ class DetailScreenViewModel @Inject constructor(
 
     init {
         getCoinById(coinId)
-        getMarkChartById(coinId)
+        getMarketChartById(coinId, days = "1", shortHandDays = "1D")
     }
 
     private fun toCurrencyString(number: Double?): String {
@@ -64,6 +64,15 @@ class DetailScreenViewModel @Inject constructor(
         }
     }
 
+    fun onDaysSelect(days: String) {
+        when (days) {
+            "1D" -> getMarketChartById(coinId, days = "1", shortHandDays = days)
+            "1W" -> getMarketChartById(coinId, days = "7", shortHandDays = days)
+            "1M" -> getMarketChartById(coinId, days = "30", shortHandDays = days)
+            "3M" -> getMarketChartById(coinId, days = "90", shortHandDays = days)
+            "max" -> getMarketChartById(coinId, days = "max", shortHandDays = days)
+        }
+    }
 
     private fun getCoinById(coinId: String) {
         viewModelScope.launch {
@@ -82,8 +91,7 @@ class DetailScreenViewModel @Inject constructor(
                         atl = toCurrencyString(coin.marketData.atl["usd"]),
                         image = coin.image.thumb,
                     )
-                }
-                else {
+                } else {
                     _uiState.value = _uiState.value.copy(
                         marketCapRank = "NA",
                         marketCap = "NA",
@@ -100,15 +108,13 @@ class DetailScreenViewModel @Inject constructor(
         }
     }
 
-    private fun getMarkChartById(coinId: String) {
+    private fun getMarketChartById(coinId: String, days: String, shortHandDays: String) {
         viewModelScope.launch {
-            detailRepository.getMarketChartById(coinId).collect { marketChart ->
+            detailRepository.getMarketChartById(coinId, days).collect { marketChart ->
                 _uiState.value = _uiState.value.copy(
-                    prices = marketChart.prices.map {
-                                it -> it.map { it.toDouble() }
-                    }
+                    prices = marketChart.prices.map { it -> it.map { it.toDouble() } },
+                    daysSelected = shortHandDays,
                 )
-                Log.d("DetailViewModel", "getMarketChartById: ${uiState.value.prices}")
             }
         }
     }

@@ -46,16 +46,10 @@ interface CoingeckoAPIService {
         @Query("days") days: String,
     ): Response<MarketChart>
 
-//    @GET("coins/{id}/tickers")
-//    suspend fun getCoinsIdTickers(): String
-//
-//    @GET("coins/{id}/history")
-//    suspend fun getCoinsIdHistory(): String
-
     @GET("search/")
     suspend fun search(
         @Query("query") q: String,
-    ) : Response<SearchResults>
+    ): Response<SearchResults>
 
     @GET("search/trending")
     suspend fun getSearchTrending(): Response<TrendingCoinList>

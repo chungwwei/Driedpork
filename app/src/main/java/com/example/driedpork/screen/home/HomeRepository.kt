@@ -5,6 +5,7 @@ import com.example.driedpork.coingecko.CoingeckoAPI
 import com.example.driedpork.model.coingecko.Market
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class HomeRepository {
@@ -27,5 +28,7 @@ class HomeRepository {
             delay(15000)
             Log.d("HomeRepository", "delaying then refetching")
         }
+    }.catch {
+        Log.d("HomeRepository", "error: $it")
     }
 }

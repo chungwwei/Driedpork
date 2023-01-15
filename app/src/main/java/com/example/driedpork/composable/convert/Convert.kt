@@ -1,16 +1,10 @@
 package com.example.driedpork.composable.convert
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,11 +27,11 @@ fun ConvertScreen(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
-    ){
+    ) {
         val uiState by convertScreenViewModel.uiState.collectAsState()
         val coinList = uiState.convertedCoinsList as List<ConvertedCoinItem>
         Row(
-            verticalAlignment= Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -85,7 +79,7 @@ fun ConvertResults(coins: List<ConvertedCoinItem>) {
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         coins.forEach { coin ->
             ConvertDisplayItem(coin)
@@ -98,40 +92,46 @@ fun ConvertDisplayItem(coin: ConvertedCoinItem) {
     val numberFormat: NumberFormat = NumberFormat.getNumberInstance();
     numberFormat.maximumFractionDigits = 10
     numberFormat.minimumFractionDigits = 2
-    Box(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(76.dp)
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-            .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp)),
-        contentAlignment = Alignment.CenterStart,
+            .height(76.dp),
+        shape = RoundedCornerShape(24.dp),
+        elevation = 8.dp,
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(4.dp),
+            contentAlignment = Alignment.CenterStart,
         ) {
-            // crypto icon
-            Image(
-                painter = rememberImagePainter(coin.image),
-                contentDescription = "Crypto Icon",
-                modifier = Modifier
-                    .size(50.dp)
-                    .align(Alignment.CenterVertically)
-            )
-
             Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                    .padding(horizontal = 16.dp),
             ) {
-                // crypto name
-                Text(coin.name)
-                // price
-                Text(numberFormat.format(coin.convertedPrice))
+                // crypto icon
+                Image(
+                    painter = rememberImagePainter(coin.image),
+                    contentDescription = "Crypto Icon",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .align(Alignment.CenterVertically)
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    // crypto name
+                    Text(coin.name)
+                    // price
+                    Text(numberFormat.format(coin.convertedPrice))
+                }
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.example.driedpork.composable.search
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -24,7 +24,7 @@ fun SearchResults(label: String, coins: List<CoinDisplay>, onItemClick: (coinId:
             Text(label)
         }
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState()),
@@ -40,48 +40,53 @@ fun SearchResults(label: String, coins: List<CoinDisplay>, onItemClick: (coinId:
 
 @Composable
 fun SearchResultItem(coin: CoinDisplay, onItemClick: (coinId: String) -> Unit) {
-    Box(
+    Surface(
         modifier = Modifier
+            .fillMaxWidth()
             .clickable {
                 onItemClick(coin.id)
-                Log.d("click", "lots of licks")
             }
-            .fillMaxWidth()
-            .height(76.dp)
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-            .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp)),
-        contentAlignment = Alignment.CenterStart,
+            .height(76.dp),
+        shape = RoundedCornerShape(24.dp),
+        elevation = 8.dp,
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp),
+                .padding(4.dp),
+            contentAlignment = Alignment.CenterStart,
         ) {
-            // crypto icon
-            Image(
-                painter = rememberImagePainter(coin.image),
-                contentDescription = "Crypto Icon",
-                modifier = Modifier
-                    .size(50.dp)
-                    .align(Alignment.CenterVertically)
-            )
-
             Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                // crypto full name and short hand column
-                Column() {
-                    Text(coin.name)
-                    Text(coin.symbol)
-                }
+                // crypto icon
+                Image(
+                    painter = rememberImagePainter(coin.image),
+                    contentDescription = "Crypto Icon",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .align(Alignment.CenterVertically)
+                )
 
-                // ranking
-                Text("#${coin.marketCapRank}")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    // crypto full name and short hand column
+                    Column() {
+                        Text(coin.name)
+                        Text(coin.symbol)
+                    }
+
+                    // ranking
+                    Text("#${coin.marketCapRank}")
+                }
             }
         }
     }

@@ -7,12 +7,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -27,43 +30,50 @@ fun CryptoItem(m: Market, onItemClick: (coinId: String) -> Unit) {
     val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale("en", "US"))
     numberFormat.maximumFractionDigits = 2
     numberFormat.minimumFractionDigits = 2
-    Box(
+    Surface(
         modifier = Modifier
+            .fillMaxWidth()
             .clickable {
                 onItemClick(m.id)
             }
-            .border(width = 1.dp, color = Color.Blue, shape = RoundedCornerShape(24.dp))
-            .padding(16.dp)
-
+            .height(76.dp),
+        shape = RoundedCornerShape(24.dp),
+        elevation = 8.dp,
     ) {
-        Row() {
-            // crypto icon
-            Image(
-                painter = rememberImagePainter(m.image),
-                contentDescription = "Crypto Icon",
-                modifier = Modifier
-                    .size(50.dp)
-                    .align(Alignment.CenterVertically)
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row() {
+                // crypto icon
+                Image(
+                    painter = rememberImagePainter(m.image),
+                    contentDescription = "Crypto Icon",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .align(Alignment.CenterVertically)
+                )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                // crypto full name and short hand column
-                Column() {
-                    Text(m.name)
-                    Text(m.symbol)
-                }
-
-                // price and percentage change
-                Column(
-                    horizontalAlignment = Alignment.End
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(numberFormat.format(m.currentPrice))
-                    Text("${m.priceChangePercentage24h}%", color = percentageChangeColor)
+                    // crypto full name and short hand column
+                    Column() {
+                        Text(m.name)
+                        Text(m.symbol)
+                    }
+
+                    // price and percentage change
+                    Column(
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Text(numberFormat.format(m.currentPrice))
+                        Text("${m.priceChangePercentage24h}%", color = percentageChangeColor)
+                    }
                 }
             }
         }
@@ -83,7 +93,6 @@ fun CoinsList(coins: List<Market>, onItemClick: (coinId: String) -> Unit) {
         }
     }
 }
-
 
 
 @Composable

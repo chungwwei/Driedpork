@@ -1,9 +1,11 @@
 package com.example.driedpork.screen.detail
 
+import android.util.Log
 import com.example.driedpork.coingecko.CoingeckoAPI
 import com.example.driedpork.model.coingecko.CoinData
 import com.example.driedpork.model.coingecko.MarketChart
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class DetailRepository {
@@ -14,6 +16,8 @@ class DetailRepository {
         if (coinData != null) {
             emit(coinData)
         }
+    }.catch {
+        Log.d("DetailRepository", "error: $it")
     }
 
     suspend fun getMarketChartById(coinId: String, days: String): Flow<MarketChart> = flow {
@@ -26,5 +30,7 @@ class DetailRepository {
         if (marketChart != null) {
             emit(marketChart)
         }
+    }.catch {
+        Log.d("DetailRepository", "error: $it")
     }
 }

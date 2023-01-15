@@ -50,7 +50,7 @@ data class Market(
     @Json(name="sparkline_in_7d")
     val sparklineIn7d: SparklineIn7d? = null,
     @Json(name="price_change_percentage_1h_in_currency")
-    val priceChangePercentage1hInCurrency: Double = 0.0,
+    val priceChangePercentage1hInCurrency: Double? = 0.0,
     @Json(name="fully_diluted_valuation")
     val fullyDilutedValuation: Double?,
     @Json(name="max_supply")

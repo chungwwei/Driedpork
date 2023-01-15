@@ -11,6 +11,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -27,8 +28,7 @@ fun SearchResults(label: String, coins: List<CoinDisplay>, onItemClick: (coinId:
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(vertical = 8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
 
             items(coins.size) { index ->
@@ -39,14 +39,12 @@ fun SearchResults(label: String, coins: List<CoinDisplay>, onItemClick: (coinId:
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchResultItem(coin: CoinDisplay, onItemClick: (coinId: String) -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onItemClick(coin.id)
-            }
             .height(76.dp),
         shape = RoundedCornerShape(24.dp),
         elevation = 8.dp,
@@ -54,7 +52,11 @@ fun SearchResultItem(coin: CoinDisplay, onItemClick: (coinId: String) -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(4.dp),
+                .clip(RoundedCornerShape(24.dp))
+                .combinedClickable(
+                    onClick = { onItemClick(coin.id) },
+                )
+                .padding(16.dp),
             contentAlignment = Alignment.CenterStart,
         ) {
             Row(
